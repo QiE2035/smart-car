@@ -1,0 +1,341 @@
+{
+  "name": "SEEKFREE",
+  "type": "C51",
+  "dependenceList": [],
+  "srcDirs": [],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": [
+      {
+        "name": "code_c",
+        "files": [
+          {
+            "path": "Project/CODE/src/button.c"
+          },
+          {
+            "path": "Project/CODE/src/encoder.c"
+          },
+          {
+            "path": "Project/CODE/src/imu660ra.c"
+          },
+          {
+            "path": "Project/CODE/src/motor.c"
+          },
+          {
+            "path": "Project/CODE/src/pid.c"
+          },
+          {
+            "path": "Project/CODE/src/switch.c"
+          },
+          {
+            "path": "Project/CODE/src/tof.c"
+          },
+          {
+            "path": "Project/CODE/src/adc.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "code_h",
+        "files": [
+          {
+            "path": "Project/CODE/inc/adc.h"
+          },
+          {
+            "path": "Project/CODE/inc/beep.h"
+          },
+          {
+            "path": "Project/CODE/inc/button.h"
+          },
+          {
+            "path": "Project/CODE/inc/encoder.h"
+          },
+          {
+            "path": "Project/CODE/inc/hall.h"
+          },
+          {
+            "path": "Project/CODE/inc/imu660ra.h"
+          },
+          {
+            "path": "Project/CODE/inc/motor.h"
+          },
+          {
+            "path": "Project/CODE/inc/pid.h"
+          },
+          {
+            "path": "Project/CODE/inc/switch.h"
+          },
+          {
+            "path": "Project/CODE/inc/tof.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "doc",
+        "files": [],
+        "folders": []
+      },
+      {
+        "name": "seekfree_libraries",
+        "files": [
+          {
+            "path": "Libraries/seekfree_libraries/zf_adc.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_adc.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_delay.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_delay.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_eeprom.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_eeprom.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_exti.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_exti.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_fifo.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_fifo.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_gpio.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_gpio.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_nvic.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_nvic.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_pwm.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_pwm.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_spi.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_spi.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_tim.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_tim.h"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_uart.c"
+          },
+          {
+            "path": "Libraries/seekfree_libraries/zf_uart.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/headfile.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "seekfree_peripheral",
+        "files": [
+          {
+            "path": "Libraries/seekfree_peripheral/headfile.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_18TFT.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_18TFT.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_BLUETOOTH_CH9141.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_BLUETOOTH_CH9141.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_CONFIG.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_CONFIG.LIB"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_DL1A.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_DL1A.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_FONT.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_FONT.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_ICM20602.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_ICM20602.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IMU660RA.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IMU660RA.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IMU963RA.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IMU963RA.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IPS114_SPI.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_IPS114_SPI.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_MPU6050.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_MPU6050.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_OLED.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_OLED.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_PRINTF.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_PRINTF.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_VIRSCO.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_VIRSCO.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_WIRELESS_CH573.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_WIRELESS_CH573.h"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_WIRELESS.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_WIRELESS.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "startup",
+        "files": [
+          {
+            "path": "Libraries/libraries/board.c"
+          },
+          {
+            "path": "Libraries/libraries/board.h"
+          },
+          {
+            "path": "Libraries/libraries/common.c"
+          },
+          {
+            "path": "Libraries/libraries/common.h"
+          },
+          {
+            "path": "Libraries/libraries/STC32Gxx.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "user_c",
+        "files": [
+          {
+            "path": "Project/USER/src/isr.c"
+          },
+          {
+            "path": "Project/USER/src/main.c"
+          },
+          {
+            "path": "Project/USER/src/tm1_isr.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "user_h",
+        "files": [
+          {
+            "path": "Project/USER/inc/isr.h"
+          }
+        ],
+        "folders": []
+      }
+    ]
+  },
+  "outDir": "build",
+  "deviceName": null,
+  "packDir": null,
+  "miscInfo": {
+    "uid": "7cf9f23a2607608b3a979732748fda1a"
+  },
+  "targets": {
+    "STC32G12K128": {
+      "excludeList": [],
+      "toolchain": "Keil_C51",
+      "compileConfig": {
+        "options": "null"
+      },
+      "uploader": "Custom",
+      "uploadConfig": {
+        "bin": "",
+        "commandLine": "python ./tools/stcflash.py -p ${port} \"${programFile}\"",
+        "eraseChipCommand": ""
+      },
+      "uploadConfigMap": {},
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          "C:/Program Files (x86)/Keil_v5/C251/INC/STC",
+          "Libraries/libraries",
+          "Libraries/seekfree_libraries",
+          "Libraries/seekfree_peripheral",
+          "Project/CODE",
+          "Project/USER/inc",
+          "Project/USER/src",
+          "Project/CODE/inc"
+        ],
+        "libList": [],
+        "sourceDirList": [],
+        "defineList": []
+      }
+    }
+  },
+  "version": "3.3"
+}
