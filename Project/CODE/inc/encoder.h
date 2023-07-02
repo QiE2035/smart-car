@@ -3,11 +3,11 @@
 
 #include "headfile.h"
 
+#define ENCODER_L CTIM0_P34
+#define ENCODER_R CTIM3_P04
+
 #define ENCODER_L_DIR P35
 #define ENCODER_R_DIR P53
-
-#define ENCODER_L     CTIM0_P34
-#define ENCODER_R     CTIM3_P04
 
 // 编码器分辨率
 #define ENCODER_RES 1024
