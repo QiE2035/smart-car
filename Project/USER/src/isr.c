@@ -114,7 +114,7 @@ void INT4_Isr() interrupt 16
 
 void TM0_Isr() interrupt 1
 {
-    printf("test\n\r");
+    // printf("test\n\r");
 }
 void TM1_Isr() interrupt 3
 {
