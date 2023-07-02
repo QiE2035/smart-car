@@ -19,12 +19,11 @@
 
 #include "headfile.h"
 
-#include "motor.h"
-#include "encoder.h"
-#include "pid.h"
-
-#include "switch.h"
 #include "button.h"
+#include "encoder.h"
+#include "motor.h"
+#include "pid.h"
+#include "switch.h"
 /*
  * 系统频率，可查看board.h中的 FOSC 宏定义修改。
  * board.h文件中FOSC的值设置为0,则程序自动设置系统频率为33.1776MHZ
@@ -55,7 +54,7 @@ void main()
     // motor_pwm(1000, 1000);
 
     while (1) {
-        printf("%d\n", (encoder_l - encoder_r));
+        printf("%d, %d, %d\n", encoder_l, encoder_r, (encoder_l - encoder_r));
 
         if (main_count++ % 10 == 0) {
             ips114_showint16(0, 0, encoder_l);

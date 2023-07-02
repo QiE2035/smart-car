@@ -1,9 +1,9 @@
 #include "headfile.h"
 
-#include "encoder.h"
-#include "pid.h"
-#include "motor.h"
 #include "button.h"
+#include "encoder.h"
+#include "motor.h"
+#include "pid.h"
 
 bool button_3_click = false;
 
@@ -14,6 +14,11 @@ void tm1_isr_callback()
     encoder_update();
 
     if (button_3_click) {
+        /* if (encoder_l_int >= 20480 &&
+            encoder_r_int >= 20480) {
+            button_3_click = false;
+            encoder_clear_int();
+        } */
         pid_motor(200, 200);
     } else {
         // motor_pwm(0, 0);

@@ -3,17 +3,35 @@
 #include "encoder.h"
 #include "motor.h"
 
+int pid_i_limit(int input, int limit)
+{
+    if (input > 0) {
+        if (input > limit) {
+            return limit;
+        }
+        return input;
+    } else {
+        if (input < -limit) {
+            return -limit;
+        }
+        return input;
+    }
+}
+
 int pid(pid_t *pid_data, int target, int current)
 {
     int p = target - current;
 
-    if (target <= 0 && pid_data->i > 0) {
+    if ((target <= 0 && pid_data->i > 0) ||
+        (target >= 0 && pid_data->i < 0)) {
         pid_data->i = 0;
     }
 
     pid_data->i += p;
     pid_data->d = p - pid_data->p;
     pid_data->p = p;
+
+    pid_i_limit(pid_data->i, PID_LIMIT);
 
     return pid_data->kp * pid_data->p +
            pid_data->ki * pid_data->i +
@@ -33,8 +51,8 @@ void pid_motor(int target_l, int target_r)
                    (target_l - target_r),
                    (encoder_l - encoder_r));
 
-    pwm_l = pid(&pid_motor_l, target_l, encoder_l) + bias;
-    pwm_r = pid(&pid_motor_r, target_r, encoder_r) - bias;
+    pwm_l = pid(&pid_motor_l, target_l + bias, encoder_l);
+    pwm_r = pid(&pid_motor_r, target_r - bias, encoder_r);
 
     motor_pwm(pwm_l, pwm_r);
 }
