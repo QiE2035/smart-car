@@ -36,8 +36,13 @@
             "pid",
             "switch",
             "beep",
-            "isr"
-        ]
+            "isr",
+            "vscode"
+        ],
+        "yaml.schemas": {
+            // ".clang-format": "./clang-format.json",
+            ".vscode/clang-format.json": ".clang-format",
+        }
     },
     "extensions": {
         "recommendations": [

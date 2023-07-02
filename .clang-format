@@ -19,20 +19,20 @@ BreakBeforeBraces: Linux
 #          other styles
 ###################################
 
-# 
+#
 # for more conf, you can ref: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 #
 
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 
 AllowShortLoopsOnASingleLine: true
 
-AllowShortBlocksOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
 
 IndentCaseLabels: true
 
-SortIncludes: false
+SortIncludes: CaseSensitive
 
-AlignConsecutiveMacros: AcrossEmptyLines
+AlignConsecutiveMacros: Consecutive
 
 AlignConsecutiveAssignments: Consecutive
