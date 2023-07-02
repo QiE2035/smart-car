@@ -23,12 +23,18 @@
 #include "encoder.h"
 #include "pid.h"
 
+#include "switch.h"
+#include "button.h"
 /*
  * 系统频率，可查看board.h中的 FOSC 宏定义修改。
  * board.h文件中FOSC的值设置为0,则程序自动设置系统频率为33.1776MHZ
  * 在board_init中,已经将P54引脚设置为复位
  * 如果需要使用P54引脚,可以在board.c文件中的board_init()函数中删除SET_P54_RESRT即可
  */
+
+uint8 main_count = 0;
+
+extern bool button_3_click;
 
 void main()
 {
@@ -37,6 +43,8 @@ void main()
     ips114_init();
     ips114_clear(WHITE);
 
+    // wireless_uart_init();
+
     motor_init();
     encoder_init();
 
@@ -44,9 +52,48 @@ void main()
 
     // 此处编写用户代码(例如：外设初始化代码等)
 
-    while (1) {
-        // ips114_showint32(0, 0, pid_motor_r.d, 10);
+    // motor_pwm(1000, 1000);
 
-        // delay_ms(100);
+    while (1) {
+        printf("%d\n", (encoder_l - encoder_r));
+
+        if (main_count++ % 10 == 0) {
+            ips114_showint16(0, 0, encoder_l);
+            ips114_showint16(0, 1, encoder_r);
+            ips114_showint16(0, 2, (encoder_l - encoder_r));
+            ips114_showint16(0, 3, pid_motor_bias.kp * 10);
+            ips114_showint16(0, 4, pid_motor_bias.ki * 10);
+            ips114_showint16(0, 5, pid_motor_bias.kd * 10);
+        }
+
+        if (button_is_click(button_2)) {
+            switch (switch_data()) {
+                case 0:
+                    pid_motor_bias.kp += 0.1;
+                    break;
+                case 1:
+                    pid_motor_bias.ki += 0.1;
+                    break;
+                case 3:
+                    pid_motor_bias.kd += 0.1;
+            }
+        }
+        if (button_is_click(button_1)) {
+            switch (switch_data()) {
+                case 0:
+                    pid_motor_bias.kp -= 0.1;
+                    break;
+                case 1:
+                    pid_motor_bias.ki -= 0.1;
+                    break;
+                case 3:
+                    pid_motor_bias.kd -= 0.1;
+            }
+        }
+        if (button_is_click(button_3)) {
+            button_3_click = !button_3_click;
+        }
+
+        delay_ms(10);
     }
 }
