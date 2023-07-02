@@ -5,12 +5,14 @@
 
 typedef struct pid_t {
     float kp, ki, kd;
-    int32 p, i, d;
+    int p, i, d;
 } pid_t;
 
 extern pid_t pid_motor_l,
     pid_motor_r,
     pid_motor_bias;
+
+extern int pwm_l, pwm_r;
 
 // int pid(pid_t *pid_param);
 
