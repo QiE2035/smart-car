@@ -3,16 +3,16 @@
 #include "encoder.h"
 #include "motor.h"
 
-int pid_i_limit(int input, int limit)
+int pid_i_limit(int input)
 {
     if (input > 0) {
-        if (input > limit) {
-            return limit;
+        if (input > PID_LIMIT) {
+            return PID_LIMIT;
         }
         return input;
     } else {
-        if (input < -limit) {
-            return -limit;
+        if (input < -PID_LIMIT) {
+            return -PID_LIMIT;
         }
         return input;
     }
@@ -31,7 +31,7 @@ int pid(pid_t *pid_data, int target, int current)
     pid_data->d = p - pid_data->p;
     pid_data->p = p;
 
-    pid_i_limit(pid_data->i, PID_LIMIT);
+    pid_data->i = pid_i_limit(pid_data->i);
 
     return pid_data->kp * pid_data->p +
            pid_data->ki * pid_data->i +
