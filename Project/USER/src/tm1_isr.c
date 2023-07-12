@@ -5,7 +5,7 @@
 #include "encoder.h"
 // #include "motor.h"
 #include "pid.h"
-// #include "tof.h"
+#include "tof.h"
 #include "adc.h"
 // #include "state.h"
 
@@ -18,8 +18,8 @@ bool button_3_click = false;
 void tm1_isr_callback()
 {
     encoder_update();
-    // tof_update();
-    // adc_update();
+    tof_update();
+    adc_update();
     
 
     // if (button_3_click) {

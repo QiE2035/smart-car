@@ -41,8 +41,6 @@ uint8 main_count = 0;
 
 void main()
 {
-    // uint16 tof = 0;
-
     board_init(); // 初始化寄存器,勿删除此句代码。
 
     // ips114_init();
@@ -54,18 +52,7 @@ void main()
     // encoder_init();
     adc_init_all();
 
-    /*     while (dl1a_init()) {
-            printf("dl1a init faild!");
-        }
-        while (dl1a_2_init()) {
-            printf("dl1a_2 init faild!");
-        }
-     */
     pit_timer_ms(TIM_1, 10);
-
-    // 此处编写用户代码(例如：外设初始化代码等)
-
-    // motor_pwm(1000, 1000);
 
     while (1) {
         // printf("%d, %d\n", encoder_l, encoder_r);

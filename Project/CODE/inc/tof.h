@@ -3,6 +3,7 @@
 
 #include "headfile.h"
 
+void tof_init();
 void tof_update();
 
 #endif // __TOF_H

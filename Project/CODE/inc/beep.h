@@ -1,4 +1,4 @@
-#if !defined(__BEEP_H)
+#ifndef __BEEP_H
 #define __BEEP_H
 
 #include "headfile.h"
