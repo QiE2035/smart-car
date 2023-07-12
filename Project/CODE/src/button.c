@@ -10,7 +10,7 @@
         }                                    \
         break
 
-bool button_is_click(button_enum button)
+bool button_click(button_enum button)
 {
     bool result = false;
 

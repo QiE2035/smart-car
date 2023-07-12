@@ -3,7 +3,7 @@
 
 #include "headfile.h"
 
-#define PID_LIMIT 1024
+#define PID_I_LIMIT 10240
 
 typedef struct pid_t {
     float kp, ki, kd;

@@ -1,6 +1,7 @@
 #ifndef __BUTTON_H
 #define __BUTTON_H
 
+#include "bool.h"
 #include "headfile.h"
 
 #define BUTTON_0 !P70
@@ -17,11 +18,6 @@ typedef enum button_enum {
     button_3,
 } button_enum;
 
-typedef enum bool {
-    false,
-    true
-} bool;
-
-bool button_is_click(button_enum button);
+bool button_click(button_enum button);
 
 #endif // __BUTTON_H

@@ -3,6 +3,6 @@
 
 #include "headfile.h"
 
-uint16 tof_distance();
+void tof_update();
 
 #endif // __TOF_H

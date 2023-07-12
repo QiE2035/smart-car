@@ -47,6 +47,9 @@
             "path": "Project/CODE/inc/beep.h"
           },
           {
+            "path": "Project/CODE/inc/bool.h"
+          },
+          {
             "path": "Project/CODE/inc/button.h"
           },
           {
@@ -176,6 +179,12 @@
           },
           {
             "path": "Libraries/seekfree_peripheral/SEEKFREE_CONFIG.LIB"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_DL1A_2.c"
+          },
+          {
+            "path": "Libraries/seekfree_peripheral/SEEKFREE_DL1A_2.h"
           },
           {
             "path": "Libraries/seekfree_peripheral/SEEKFREE_DL1A.c"

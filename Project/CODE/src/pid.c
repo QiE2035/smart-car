@@ -3,22 +3,22 @@
 #include "encoder.h"
 #include "motor.h"
 
-int pid_i_limit(int input)
+static int pid_i_limit(int input)
 {
     if (input > 0) {
-        if (input > PID_LIMIT) {
-            return PID_LIMIT;
+        if (input > PID_I_LIMIT) {
+            return PID_I_LIMIT;
         }
         return input;
     } else {
-        if (input < -PID_LIMIT) {
-            return -PID_LIMIT;
+        if (input < -PID_I_LIMIT) {
+            return -PID_I_LIMIT;
         }
         return input;
     }
 }
 
-int pid(pid_t *pid_data, int target, int current)
+static int pid(pid_t *pid_data, int target, int current)
 {
     int p = target - current;
 
@@ -51,8 +51,8 @@ void pid_motor(int target_l, int target_r)
                    (target_l - target_r),
                    (encoder_l - encoder_r));
 
-    pwm_l = pid(&pid_motor_l, target_l + bias, encoder_l);
-    pwm_r = pid(&pid_motor_r, target_r - bias, encoder_r);
+    pwm_l = pid(&pid_motor_l, target_l /* + bias */, encoder_l);
+    pwm_r = pid(&pid_motor_r, target_r /* - bias */, encoder_r);
 
     motor_pwm(pwm_l, pwm_r);
 }

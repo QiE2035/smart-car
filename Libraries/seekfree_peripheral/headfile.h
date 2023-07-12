@@ -45,5 +45,6 @@
 #include "SEEKFREE_IMU660RA.h"
 #include "SEEKFREE_IMU963RA.h"
 #include "SEEKFREE_DL1A.h"
+#include "SEEKFREE_DL1A_2.h"
 
 #endif

@@ -1,9 +1,18 @@
 #include "tof.h"
+#include "bool.h"
 
-uint16 tof_distance()
+bool is_dl1a_2 = false;
+
+void tof_update()
 {
-    dl1a_get_distance();
-    while (!dl1a_finsh_flag) {}
-    dl1a_finsh_flag = 0;
-    return dl1a_distance_mm;
+    // while (!dl1a_finsh_flag /*  || !dl1a_2_finsh_flag */) {
+    if (is_dl1a_2) {
+        dl1a_get_distance();
+    } else {
+        dl1a_2_get_distance();
+    }
+    is_dl1a_2 = !is_dl1a_2;
+    // dl1a_2_get_distance();
+    // }
+    // dl1a_finsh_flag /* = dl1a_2_finsh_flag */ = 0;
 }
