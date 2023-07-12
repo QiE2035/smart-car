@@ -14,7 +14,7 @@ extern pid_t pid_motor_l,
     pid_motor_r,
     pid_motor_bias;
 
-extern int pwm_l, pwm_r;
+extern int pid_pwm_l, pid_pwm_r;
 
 // int pid(pid_t *pid_param);
 

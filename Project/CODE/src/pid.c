@@ -42,7 +42,7 @@ pid_t pid_motor_l    = {10, 0.5, -5, 0, 0, 0},
       pid_motor_r    = {10, 0.5, -5, 0, 0, 0},
       pid_motor_bias = {0, 0, 0, 0, 0, 0};
 
-int pwm_l = 0, pwm_r = 0;
+int pid_pwm_l = 0, pid_pwm_r = 0;
 
 // TODO: 拆分为单独的模块
 void pid_motor(int target_l, int target_r)
@@ -51,8 +51,8 @@ void pid_motor(int target_l, int target_r)
                    (target_l - target_r),
                    (encoder_l - encoder_r));
 
-    pwm_l = pid(&pid_motor_l, target_l /* + bias */, encoder_l);
-    pwm_r = pid(&pid_motor_r, target_r /* - bias */, encoder_r);
+    pid_pwm_l = pid(&pid_motor_l, target_l /* + bias */, encoder_l);
+    pid_pwm_r = pid(&pid_motor_r, target_r /* - bias */, encoder_r);
 
-    motor_pwm(pwm_l, pwm_r);
+    motor_pwm(pid_pwm_l, pid_pwm_r);
 }

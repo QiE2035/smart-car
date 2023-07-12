@@ -44,3 +44,17 @@ void adc_update()
         adc_data[i] = adc_once(adcs[i], ADC_12BIT);
     }
 }
+
+int adc_k[ADC_K_COUNT] = {0, 0, 0};
+
+int adc_bias_and()
+{
+    int bias = adc_k[0] * (ADC_L1 - ADC_R1) +
+               adc_k[1] * (ADC_L2 - ADC_R2) +
+               adc_k[2] * (ADC_L3 - ADC_R3),
+        and = adc_k[0] * (ADC_L1 + ADC_R1) +
+              adc_k[1] * (ADC_L2 + ADC_R2) +
+              adc_k[2] * (ADC_L3 + ADC_R3);
+
+    return bias / and;
+}

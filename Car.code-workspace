@@ -37,7 +37,8 @@
             "switch",
             "beep",
             "isr",
-            "vscode"
+            "vscode",
+            "adc"
         ],
         "yaml.schemas": {
             // ".clang-format": "./clang-format.json",
