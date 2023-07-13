@@ -6,19 +6,22 @@
 #define ENCODER_L CTIM0_P34
 #define ENCODER_R CTIM3_P04
 
-#define ENCODER_L_DIR P35
-#define ENCODER_R_DIR P53
+#define ENCODER_DIR_L P35
+#define ENCODER_DIR_R P53
 
 // 编码器分辨率
 #define ENCODER_RES 1024
 
 extern int encoder_l, encoder_r,
-    encoder_l_int, encoder_r_int;
+    encoder_int_l, encoder_int_r;
 
 void encoder_init();
 void encoder_update();
 
-#define encoder_clear_int() \
-    encoder_l_int = encoder_r_int = 0
+#define encoder_int_clear() \
+    (encoder_int_l = encoder_int_r = 0)
+
+#define encoder_int_check(target_l, target_r) \
+    (encoder_int_l >= (target_l) && encoder_int_r >= (target_r))
 
 #endif // __ENCODER_H

@@ -2,13 +2,13 @@
 
 void motor_init()
 {
-    DisableGlobalIRQ();
+    // DisableGlobalIRQ();
     gpio_mode(MOTOR_L, GPO_PP);
     gpio_mode(MOTOR_R, GPO_PP);
 
     pwm_init(MOTOR_PWM_L, MOTOR_PWM_FREQ, 0);
     pwm_init(MOTOR_PWM_R, MOTOR_PWM_FREQ, 0);
-    EnableGlobalIRQ();
+    // EnableGlobalIRQ();
 }
 
 // void motor_left()

@@ -3,18 +3,19 @@
 
 #include "headfile.h"
 
-#define MOTOR_R        P6_6
-#define MOTOR_L        P6_2
+#define MOTOR_R P6_6
+#define MOTOR_L P6_2
 
-#define MOTOR_DIR_R    P66
-#define MOTOR_DIR_L    P62
+#define MOTOR_DIR_R P66
+#define MOTOR_DIR_L P62
 
-#define MOTOR_FORWARD  1
-#define MOTOR_REVERSE  (1 - MOTOR_FORWARD)
+#define MOTOR_FORWARD 1
+#define MOTOR_REVERSE (1 - MOTOR_FORWARD)
 
-#define MOTOR_PWM_R    PWMA_CH3P_P64
-#define MOTOR_PWM_L    PWMA_CH1P_P60
-#define MOTOR_PWM_MAX  3000
+#define MOTOR_PWM_R PWMA_CH3P_P64
+#define MOTOR_PWM_L PWMA_CH1P_P60
+
+#define MOTOR_PWM_MAX 3000
 
 #define MOTOR_PWM_FREQ 17000
 

@@ -11,13 +11,13 @@
 
 // #define BUTTON_PUSH  0
 
-typedef enum button_enum {
-    button_0,
-    button_1,
-    button_2,
-    button_3,
-} button_enum;
+typedef enum btn_enum {
+    BTN_0,
+    BTN_1,
+    BTN_2,
+    BTN_3,
+} btn_enum;
 
-bool button_click(button_enum button);
+bool btn_click(btn_enum button);
 
 #endif // __BUTTON_H

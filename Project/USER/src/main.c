@@ -19,14 +19,14 @@
 
 #include "headfile.h"
 
-// #include "button.h"
+#include "adc.h"
+#include "button.h"
 #include "encoder.h"
 #include "motor.h"
 #include "pid.h"
-// #include "switch.h"
-#include "adc.h"
-#include "hall.h"
-#include "tof.h"
+#include "switch.h"
+// #include "hall.h"
+// #include "tof.h"
 
 /*
  * 系统频率，可查看board.h中的 FOSC 宏定义修改。
@@ -35,9 +35,12 @@
  * 如果需要使用P54引脚,可以在board.c文件中的board_init()函数中删除SET_P54_RESRT即可
  */
 
-uint8 main_count = 0;
+// uint8 main_count = 0;
 
-// extern bool button_3_click;
+extern bool btn_3_click;
+// extern int adc_bias_res;
+
+#define ADC_K_IDX 3
 
 void main()
 {
@@ -46,70 +49,31 @@ void main()
     // ips114_init();
     // ips114_clear(WHITE);
 
-    // wireless_uart_init();
-
-    // motor_init();
-    // encoder_init();
+    motor_init();
+    encoder_init();
     adc_init_all();
 
     pit_timer_ms(TIM_1, 10);
 
     while (1) {
-        // printf("%d, %d\n", encoder_l, encoder_r);
-
-        /* if (main_count++ % 10 == 0) {
-            ips114_showint16(0, 0, encoder_l);
-            ips114_showint16(0, 1, encoder_r);
-            ips114_showint16(0, 2, (encoder_l - encoder_r));
-            ips114_showint16(0, 3, pid_motor_bias.kp * 10);
-            ips114_showint16(0, 4, pid_motor_bias.ki * 10);
-            ips114_showint16(0, 5, pid_motor_bias.kd * 10);
-        } */
-
-        /* if (button_click(button_2)) {
-            switch (switch_data()) {
-                case 0:
-                    pid_motor_bias.kp += 0.1;
-                    break;
-                case 1:
-                    pid_motor_bias.ki += 0.1;
-                    break;
-                case 3:
-                    pid_motor_bias.kd += 0.1;
-            }
+        if (btn_click(BTN_3)) {
+            btn_3_click = !btn_3_click;
         }
 
-        if (button_click(button_1)) {
-            switch (switch_data()) {
-                case 0:
-                    pid_motor_bias.kp -= 0.1;
-                    break;
-                case 1:
-                    pid_motor_bias.ki -= 0.1;
-                    break;
-                case 3:
-                    pid_motor_bias.kd -= 0.1;
-            }
+        printf("%d, %d, %d, %d, %d, %d, %d\n",
+               ADC_L1, ADC_L2, // ADC_L3,
+               ADC_R1, ADC_R2, // ADC_R3,
+               ADC_MF, ADC_MB, adc_bias);
+
+        if (btn_click(BTN_1)) {
+            // if (SWITCH_CHECK(0, 0, 0, 0)) {
+            adc_k[ADC_K_IDX] += 10;
+            // }
+        } else if (btn_click(BTN_2)) {
+            adc_k[ADC_K_IDX] -= 10;
         }
 
-  */
-        /*         if (button_click(button_3)) {
-                    button_3_click = !button_3_click;
-                }
-         */
-
-        // tof_update();
-
-        // if (dl1a_finsh_flag && dl1a_2_finsh_flag) {
-        /*         printf("%d, %d, %d, %d, %d, %d, %d, %d\n",
-                       adc_data[0], adc_data[1], adc_data[2], adc_data[3],
-                       adc_data[4], adc_data[5], adc_data[6], adc_data[7]); */
-        // }
-
-        printf("%d\n", HALL);
-
-        // ips114_showuint16(0, 0, tof);
-
+        // printf("%d\n", adc_bias);
         delay_ms(10);
     }
 }

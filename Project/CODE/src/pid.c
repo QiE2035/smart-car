@@ -1,5 +1,6 @@
 #include "pid.h"
 
+#include "adc.h"
 #include "encoder.h"
 #include "motor.h"
 
@@ -38,21 +39,32 @@ static int pid(pid_t *pid_data, int target, int current)
            pid_data->kd * pid_data->d;
 }
 
-pid_t pid_motor_l    = {10, 0.5, -5, 0, 0, 0},
-      pid_motor_r    = {10, 0.5, -5, 0, 0, 0},
-      pid_motor_bias = {0, 0, 0, 0, 0, 0};
+#define PID_NEW(KP, KI, KD)       \
+    {                             \
+        (KP), (KI), (KD), 0, 0, 0 \
+    }
 
-int pid_pwm_l = 0, pid_pwm_r = 0;
+pid_t pid_motor_l   = PID_NEW(10, 0.5, -5),
+      pid_motor_r   = PID_NEW(10, 0.5, -5);
+    //   pid_motor_adc = PID_NEW(0.8, 0, -5);
+
+#undef PID_NEW
+
+int pid_pwm_l = 0, pid_pwm_r = 0/* , pid_pwm_adc = 0 */;
 
 // TODO: 拆分为单独的模块
 void pid_motor(int target_l, int target_r)
 {
-    int bias = pid(&pid_motor_bias,
-                   (target_l - target_r),
-                   (encoder_l - encoder_r));
 
-    pid_pwm_l = pid(&pid_motor_l, target_l /* + bias */, encoder_l);
-    pid_pwm_r = pid(&pid_motor_r, target_r /* - bias */, encoder_r);
+    // pid_pwm_adc = pid(&pid_motor_adc, 0, adc_bias);
+
+    pid_pwm_l = pid(&pid_motor_l, target_l, encoder_l) /* + pid_pwm_adc */;
+    pid_pwm_r = pid(&pid_motor_r, target_r, encoder_r) /* - pid_pwm_adc */;
 
     motor_pwm(pid_pwm_l, pid_pwm_r);
 }
+
+/* void pid_adc()
+{
+    pid_pwm_adc = pid(&pid_motor_adc, 0, adc_bias);
+} */

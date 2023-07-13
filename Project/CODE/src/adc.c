@@ -1,6 +1,6 @@
 #include "adc.h"
 
-uint16 adc_data[8];
+uint16 adc_datas[8];
 
 ADCN_enum adcs[ADC_COUNT] = {
     ADC_P00,
@@ -14,40 +14,19 @@ ADCN_enum adcs[ADC_COUNT] = {
 
 void adc_init_all()
 {
-
-    /*     adc_init(ADC_0, ADC_SYSclk_DIV_2);
-        adc_init(ADC_1, ADC_SYSclk_DIV_2);
-        adc_init(ADC_2, ADC_SYSclk_DIV_2);
-        adc_init(ADC_3, ADC_SYSclk_DIV_2);
-        adc_init(ADC_4, ADC_SYSclk_DIV_2);
-        adc_init(ADC_5, ADC_SYSclk_DIV_2);
-        adc_init(ADC_6, ADC_SYSclk_DIV_2);
-        adc_init(ADC_7, ADC_SYSclk_DIV_2); */
     int i = 0;
     while (++i < ADC_COUNT) {
         adc_init(adcs[i], ADC_SYSclk_DIV_2);
     }
 }
 
-void adc_update()
-{
-    /*     adc_data[0] = adc_once(ADC_0, ADC_12BIT);
-        adc_data[1] = adc_once(ADC_1, ADC_12BIT);
-        adc_data[2] = adc_once(ADC_2, ADC_12BIT);
-        adc_data[3] = adc_once(ADC_3, ADC_12BIT);
-        adc_data[4] = adc_once(ADC_4, ADC_12BIT);
-        adc_data[5] = adc_once(ADC_5, ADC_12BIT);
-        adc_data[6] = adc_once(ADC_6, ADC_12BIT);
-        adc_data[7] = adc_once(ADC_7, ADC_12BIT); */
-    int i = 0;
-    while (++i < ADC_COUNT) {
-        adc_data[i] = adc_once(adcs[i], ADC_12BIT);
-    }
-}
+int adc_k[ADC_K_COUNT] = {1, 5, 0, 100};
 
-int adc_k[ADC_K_COUNT] = {0, 0, 0};
+int adc_bias = 0;
 
-int adc_bias_and()
+// 更新差比和
+// TODO: 差比和差
+static void adc_update_bias()
 {
     int bias = adc_k[0] * (ADC_L1 - ADC_R1) +
                adc_k[1] * (ADC_L2 - ADC_R2) +
@@ -56,5 +35,40 @@ int adc_bias_and()
               adc_k[1] * (ADC_L2 + ADC_R2) +
               adc_k[2] * (ADC_L3 + ADC_R3);
 
-    return bias / and;
+    adc_bias = bias * adc_k[3] / and;
+}
+
+static uint16 adc_filter(ADCN_enum adc)
+{
+    uint16 adc_records[ADC_REC_COUNT], i, j, tmp;
+
+    for (i = 0; ++i < ADC_REC_COUNT;) {
+        adc_records[i] = adc_once(adc, ADC_12BIT);
+    }
+
+    for (i = 0; ++i < ADC_REC_COUNT;) {
+        for (j = 0; ++j < i;) {
+            if (adc_records[j] < adc_records[j + 1]) {
+                tmp                = adc_records[j];
+                adc_records[j]     = adc_records[j + 1];
+                adc_records[j + 1] = tmp;
+            }
+        }
+    }
+
+    tmp = 0;
+    for (i = 1; i < ADC_REC_COUNT - 2; i++) {
+        tmp += adc_records[i];
+    }
+
+    return tmp / (ADC_REC_COUNT - 2);
+}
+
+void adc_update()
+{
+    int i = 0;
+    while (++i < ADC_COUNT) {
+        adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
+    }
+    adc_update_bias();
 }
