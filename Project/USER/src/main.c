@@ -25,8 +25,7 @@
 #include "motor.h"
 #include "pid.h"
 #include "switch.h"
-// #include "hall.h"
-// #include "tof.h"
+#include "tof.h"
 
 /*
  * 系统频率，可查看board.h中的 FOSC 宏定义修改。
@@ -35,20 +34,41 @@
  * 如果需要使用P54引脚,可以在board.c文件中的board_init()函数中删除SET_P54_RESRT即可
  */
 
-// uint8 main_count = 0;
+#define ADC_K_IDX 1
 
-extern bool btn_3_click;
-// extern int adc_bias_res;
+void btn_fun()
+{
+    if (btn_click(BTN_3)) {
+        car_state = STATE_RUN;
+    }
 
-#define ADC_K_IDX 3
+    if (btn_click(BTN_1)) {
+        if (SWITCH_CHECK(0, 0, 0, 0)) {
+            pid_motor_adc.kp += 1;
+        } else if (SWITCH_CHECK(0, 0, 0, 1)) {
+            pid_motor_adc.ki += 1;
+        } else if (SWITCH_CHECK(0, 0, 1, 1)) {
+            pid_motor_adc.kd += 1;
+        }
+    } else if (btn_click(BTN_2)) {
+        if (SWITCH_CHECK(0, 0, 0, 0)) {
+            pid_motor_adc.kp -= 1;
+        } else if (SWITCH_CHECK(0, 0, 0, 1)) {
+            pid_motor_adc.ki -= 1;
+        } else if (SWITCH_CHECK(0, 0, 1, 1)) {
+            pid_motor_adc.kd -= 1;
+        }
+    }
+}
 
 void main()
 {
     board_init(); // 初始化寄存器,勿删除此句代码。
 
-    // ips114_init();
-    // ips114_clear(WHITE);
+    ips114_init();
+    ips114_clear(WHITE);
 
+    tof_init();
     motor_init();
     encoder_init();
     adc_init_all();
@@ -56,24 +76,28 @@ void main()
     pit_timer_ms(TIM_1, 10);
 
     while (1) {
-        if (btn_click(BTN_3)) {
-            btn_3_click = !btn_3_click;
+
+        /* printf("%d, %d, %d, %d, %d, %d, %d\n",
+               ADC_L1, ADC_R1, // ADC_L3,
+               ADC_L2, ADC_R2, // ADC_R3,
+               ADC_MF, ADC_MB, adc_bias); */
+
+        if (tof_finish) {
+            ips114_showint16(0, 0, tof_up);
+            ips114_showint16(0, 1, tof_down);
         }
+        ips114_showint16(0, 2, encoder_int_l);
+        ips114_showint16(0, 3, encoder_int_r);
+        
 
-        printf("%d, %d, %d, %d, %d, %d, %d\n",
-               ADC_L1, ADC_L2, // ADC_L3,
-               ADC_R1, ADC_R2, // ADC_R3,
-               ADC_MF, ADC_MB, adc_bias);
+        btn_fun();
 
-        if (btn_click(BTN_1)) {
-            // if (SWITCH_CHECK(0, 0, 0, 0)) {
-            adc_k[ADC_K_IDX] += 10;
-            // }
-        } else if (btn_click(BTN_2)) {
-            adc_k[ADC_K_IDX] -= 10;
-        }
+        /*  printf("%d, %f, %f, %f, %d\n",
+                adc_bias, pid_motor_adc.kp,
+                pid_motor_adc.ki, pid_motor_adc.kd,
+                pid_pwm_adc); */
 
-        // printf("%d\n", adc_bias);
+        // printf("%d\n", car_state);
         delay_ms(10);
     }
 }

@@ -1,5 +1,4 @@
 #include "tof.h"
-#include "bool.h"
 
 bool is_dl1a = false;
 

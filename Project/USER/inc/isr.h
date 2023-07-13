@@ -20,6 +20,15 @@
 #ifndef __ISR_H_
 #define __ISR_H_
 
+typedef enum state_enum {
+    STATE_STOP,
+    STATE_OUT,
+    STATE_RUN,
+    STATE_BARRIER,
+    STATE_IN,
+} state_enum;
+extern state_enum car_state;
+
 void tm1_isr_callback();
 
 #endif

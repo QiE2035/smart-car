@@ -35,4 +35,4 @@ SortIncludes: CaseSensitive
 
 AlignConsecutiveMacros: Consecutive
 
-AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveAssignments: None

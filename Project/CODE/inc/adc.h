@@ -7,15 +7,15 @@
 #define ADC_K_COUNT   4
 #define ADC_REC_COUNT 10
 
-extern uint16 adc_datas[ADC_COUNT];
-extern int adc_k[ADC_K_COUNT];
+extern int adc_datas[ADC_COUNT];
+extern float adc_k[ADC_K_COUNT];
 
 #define ADC_L1 adc_datas[7]
 #define ADC_L2 adc_datas[6]
 #define ADC_L3 adc_datas[5]
 
-#define ADC_R2 adc_datas[1]
 #define ADC_R1 adc_datas[2]
+#define ADC_R2 adc_datas[1]
 #define ADC_R3 adc_datas[0]
 
 #define ADC_MF adc_datas[3]

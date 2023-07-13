@@ -1,6 +1,6 @@
 #include "adc.h"
 
-uint16 adc_datas[8];
+int adc_datas[8];
 
 ADCN_enum adcs[ADC_COUNT] = {
     ADC_P00,
@@ -20,7 +20,7 @@ void adc_init_all()
     }
 }
 
-int adc_k[ADC_K_COUNT] = {1, 5, 0, 100};
+float adc_k[ADC_K_COUNT] = {1.0, 2.5, 0, 150};
 
 int adc_bias = 0;
 
@@ -49,8 +49,8 @@ static uint16 adc_filter(ADCN_enum adc)
     for (i = 0; ++i < ADC_REC_COUNT;) {
         for (j = 0; ++j < i;) {
             if (adc_records[j] < adc_records[j + 1]) {
-                tmp                = adc_records[j];
-                adc_records[j]     = adc_records[j + 1];
+                tmp = adc_records[j];
+                adc_records[j] = adc_records[j + 1];
                 adc_records[j + 1] = tmp;
             }
         }
@@ -64,11 +64,23 @@ static uint16 adc_filter(ADCN_enum adc)
     return tmp / (ADC_REC_COUNT - 2);
 }
 
+// int adc_mins[ADC_COUNT] = {0, 77, 50, 35, 20, 0, 130, 0};
+int adc_mins[ADC_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
 void adc_update()
 {
-    int i = 0;
+    int i = 0, tmp = 0;
     while (++i < ADC_COUNT) {
+        /* tmp = adc_filter(adcs[i]) - adc_mins[i];
+        tmp = max(tmp, 0);
+        adc_datas[i] =
+            tmp / (ADC_MAX - adc_mins[i]) * ADC_NORMAL; */
         adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
+        // adc_datas[i] = adc_filter(adcs[i]);
     }
     adc_update_bias();
 }
+
+#undef max

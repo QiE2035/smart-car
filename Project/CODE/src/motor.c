@@ -42,6 +42,6 @@ void motor_pwm(int pwm_l, int pwm_r)
     } else {
         MOTOR_DIR_R = MOTOR_FORWARD;
     }
-    pwm_l = min(pwm_l, MOTOR_PWM_MAX);
+    pwm_r = min(pwm_r, MOTOR_PWM_MAX);
     pwm_duty(MOTOR_PWM_R, pwm_r);
 }
