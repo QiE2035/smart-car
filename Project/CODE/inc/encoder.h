@@ -21,7 +21,7 @@ void encoder_update();
 #define encoder_int_clear() \
     (encoder_int_l = encoder_int_r = 0)
 
-#define encoder_int_check(target_l, target_r) \
-    (encoder_int_l < target_l && encoder_int_r < target_r)
+#define encoder_arrive(target) \
+    (encoder_int_l < target && encoder_int_r < target)
 
 #endif // __ENCODER_H

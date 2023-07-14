@@ -23,7 +23,7 @@ bool barrier_next = true;
 
 #define BARRIER_CASE_ENC(case_data, operation, case_encoder) \
     case case_data:                                          \
-        if (encoder_int_check(case_encoder, case_encoder)) { \
+        if (encoder_arrive(case_encoder)) {                  \
             operation();                                     \
         } else {                                             \
             barrier_next = true;                             \
@@ -41,15 +41,17 @@ bool barrier_next = true;
 
 #define BARRIER_TURN 30
 
-#define BARRIER_IO 1024
-#define BARRIER_GO 1024
+#define BARRIER_IO 7600
+#define BARRIER_GO 7600
+
+#define STAGE_WAIT 10
 
 static void car_barrier()
 {
-    // 每次状态切换等待 1s
+    // 每次状态切换等待
     if (barrier_next) {
         car_stop();
-        if (count++ > 100) {
+        if (count++ > STAGE_WAIT) {
             count = 0;
             imu660ra_yaw = 0;
             encoder_int_clear();
@@ -67,17 +69,60 @@ static void car_barrier()
             BARRIER_CASE_YAW(7, turn_right, < BARRIER_TURN); // 右转，摆正
             case 8:
                 // 绕障完成，切回正常运行
-                encoder_int_clear();
+                // imu660ra_yaw = 0;
+                // encoder_int_clear();
                 barrier_stage = 0;
                 barrier_next = true;
-                imu660ra_yaw = 0;
-                car_state = CAR_STOP; // TODO: CAR_RUN
+                car_state = CAR_RUN;
                 break;
         }
     }
 }
 
-#undef BARRIER_CASE
+#undef BARRIER_CASE_ENC
+#undef BARRIER_CASE_YAW
+
+uint16 out_stage = 0;
+bool out_next = true;
+
+static void car_out()
+{
+    if (out_next) {
+        car_stop();
+        if (count++ > STAGE_WAIT) {
+            count = 0;
+            imu660ra_yaw = 0;
+            encoder_int_clear();
+            out_stage++;
+            out_next = false;
+        }
+    } else {
+        switch (out_stage) {
+            case 1:
+                // 直行，出库
+                if (encoder_arrive(7340)) {
+                    normal_run();
+                } else {
+                    out_next = true;
+                }
+                break;
+            case 2:
+                // 出库，左转
+                if (imu660ra_yaw > -60) {
+                    turn_left();
+                } else {
+                    out_next = true;
+                }
+                break;
+            case 3:
+                // 出库完成，开始运行
+                out_stage = 0;
+                out_next = true;
+                car_state = CAR_RUN;
+                return;
+        }
+    }
+}
 
 static void car_run()
 {
@@ -92,18 +137,23 @@ static void car_run()
         }
     }
 
-    // 冲出赛道和霍尔停车
     if (!has_adc || HALL) {
+        // 冲出赛道和霍尔停车
         car_state = CAR_STOP;
-    } else if (tof_finish && tof_up <= 500) {
+        return;
+    }
+    if (tof_finish && tof_up <= 500) {
+        // 障碍
+        tof_reset();
         pid_adc = false;
-        car_state = CAR_BARRIER;
         barrier_stage = 0;
         barrier_next = true;
-        tof_finish = 0;
+        car_state = CAR_BARRIER;
     }
 
-    // 延迟 1s 后摆正
+    normal_run();
+
+    /* // 延迟 1s 后摆正
     if (count > 100) {
         pid_adc = true;
         // 延迟 3s 后启动
@@ -115,7 +165,7 @@ static void car_run()
         }
     } else {
         count++;
-    }
+    } */
 }
 
 void tm1_isr_callback()
@@ -137,6 +187,9 @@ void tm1_isr_callback()
             break;
         case CAR_BARRIER:
             car_barrier();
+            break;
+        case CAR_OUT:
+            car_out();
             break;
     }
 }

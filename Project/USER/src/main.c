@@ -40,10 +40,11 @@
 void btn_fun()
 {
     if (btn_click(BTN_3)) {
-        car_state = CAR_BARRIER;
+        delay_ms(3000);
+        car_state = CAR_OUT;
     }
 
-    if (btn_click(BTN_1)) {
+    /* if (btn_click(BTN_1)) {
         if (SWITCH_CHECK(0, 0, 0, 0)) {
             pid_motor_adc.kp += 1;
         } else if (SWITCH_CHECK(0, 0, 0, 1)) {
@@ -59,7 +60,7 @@ void btn_fun()
         } else if (SWITCH_CHECK(0, 0, 1, 1)) {
             pid_motor_adc.kd -= 1;
         }
-    }
+    } */
 
     if (btn_click(BTN_0)) {
         encoder_int_clear();
@@ -95,19 +96,21 @@ void main()
 
         btn_fun();
 
-        /* 'if (tof_finish) {
-            ips114_showint16(0, 0, tof_up);
-        }
-        ips114_showint32(0, 1, encoder_int_l, 10);
-        ips114_showint32(0, 2, encoder_int_r, 10);' */
+        /* ips114_showint32(0, 1, encoder_int_l, 10);
+        ips114_showint32(0, 2, encoder_int_r, 10);
+
+        if (tof_finish) {
+            ips114_showuint16(0, 3, tof_up);
+            tof_reset();
+        } */
 
         /*  printf("%d, %f, %f, %f, %d\n",
                 adc_bias, pid_motor_adc.kp,
                 pid_motor_adc.ki, pid_motor_adc.kd,
                 pid_pwm_adc); */
 
-        printf("%f, %d\n",
-               imu660ra_yaw, barrier_stage);
+        // printf("%f, %d\n",
+        //        imu660ra_yaw, barrier_stage);
 
         /* printf("%d, %d, %d, %d, %d, %d\n",
                encoder_l, encoder_r,

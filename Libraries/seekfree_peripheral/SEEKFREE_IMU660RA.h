@@ -44,7 +44,7 @@
 #include "board.h"
 
 
-#define IMU660RA_USE_SOFT_IIC       	(0)         // 默认使用软件 SPI 方式驱动
+#define IMU660RA_USE_SOFT_IIC       	(1)         // 默认使用软件 SPI 方式驱动
 
 #if IMU660RA_USE_SOFT_IIC                                         
 //=====================================================软件 IIC 驱动====================================================
