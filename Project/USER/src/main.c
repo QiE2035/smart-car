@@ -22,6 +22,7 @@
 #include "adc.h"
 #include "button.h"
 #include "encoder.h"
+#include "imu660ra.h"
 #include "motor.h"
 #include "pid.h"
 #include "switch.h"
@@ -34,12 +35,12 @@
  * 如果需要使用P54引脚,可以在board.c文件中的board_init()函数中删除SET_P54_RESRT即可
  */
 
-#define ADC_K_IDX 1
+// #define ADC_K_IDX 1
 
 void btn_fun()
 {
     if (btn_click(BTN_3)) {
-        car_state = STATE_RUN;
+        car_state = CAR_BARRIER;
     }
 
     if (btn_click(BTN_1)) {
@@ -59,19 +60,29 @@ void btn_fun()
             pid_motor_adc.kd -= 1;
         }
     }
+
+    if (btn_click(BTN_0)) {
+        encoder_int_clear();
+    }
 }
+
+extern int barrier_stage;
+extern int count;
 
 void main()
 {
     board_init(); // 初始化寄存器,勿删除此句代码。
 
-    ips114_init();
-    ips114_clear(WHITE);
+    // ips114_init();
+    // ips114_clear(WHITE);
 
     tof_init();
     motor_init();
     encoder_init();
     adc_init_all();
+    while (imu660ra_init()) {
+        printf("imu660ra_init faild!\n");
+    };
 
     pit_timer_ms(TIM_1, 10);
 
@@ -82,22 +93,27 @@ void main()
                ADC_L2, ADC_R2, // ADC_R3,
                ADC_MF, ADC_MB, adc_bias); */
 
-        if (tof_finish) {
-            ips114_showint16(0, 0, tof_up);
-            ips114_showint16(0, 1, tof_down);
-        }
-        ips114_showint16(0, 2, encoder_int_l);
-        ips114_showint16(0, 3, encoder_int_r);
-        
-
         btn_fun();
+
+        /* 'if (tof_finish) {
+            ips114_showint16(0, 0, tof_up);
+        }
+        ips114_showint32(0, 1, encoder_int_l, 10);
+        ips114_showint32(0, 2, encoder_int_r, 10);' */
 
         /*  printf("%d, %f, %f, %f, %d\n",
                 adc_bias, pid_motor_adc.kp,
                 pid_motor_adc.ki, pid_motor_adc.kd,
                 pid_pwm_adc); */
 
-        // printf("%d\n", car_state);
+        printf("%f, %d\n",
+               imu660ra_yaw, barrier_stage);
+
+        /* printf("%d, %d, %d, %d, %d, %d\n",
+               encoder_l, encoder_r,
+               encoder_int_l, encoder_int_r,
+               barrier_stage, count); */
+
         delay_ms(10);
     }
 }

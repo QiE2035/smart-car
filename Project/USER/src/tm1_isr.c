@@ -4,45 +4,80 @@
 #include "button.h"
 #include "encoder.h"
 #include "hall.h"
+#include "imu660ra.h"
 #include "pid.h"
 #include "tof.h"
 
-state_enum car_state = STATE_STOP;
+car_enum car_state = CAR_STOP;
 
 #define SPEED 200
 
-/* enum barrier_enum {
-    BARRIER_START_R,
-    BARRIER_START_L,
-    BARRIER_RUN,
-    BARRIER_END_L,
-    BARRIER_END_R,
-} barrier = BARRIER_START_R; */
+uint16 count = 0, barrier_stage = 0;
 
-int count = 0;
+#define car_stop()   pid_motor(0, 0)
+#define turn_left()  pid_motor(0, SPEED)
+#define turn_right() pid_motor(SPEED, 0)
+#define normal_run() pid_motor(SPEED, SPEED)
 
-/* static */ void car_barrier()
+bool barrier_next = true;
+
+#define BARRIER_CASE_ENC(case_data, operation, case_encoder) \
+    case case_data:                                          \
+        if (encoder_int_check(case_encoder, case_encoder)) { \
+            operation();                                     \
+        } else {                                             \
+            barrier_next = true;                             \
+        }                                                    \
+        break
+
+#define BARRIER_CASE_YAW(case_data, operation, yaw_target) \
+    case case_data:                                        \
+        if (imu660ra_yaw yaw_target) {                     \
+            operation();                                   \
+        } else {                                           \
+            barrier_next = true;                           \
+        }                                                  \
+        break
+
+#define BARRIER_TURN 30
+
+#define BARRIER_IO 1024
+#define BARRIER_GO 1024
+
+static void car_barrier()
 {
-    if (encoder_int_check(0, 0)) {
-        // 右转
-        pid_motor(200, 0);
-    } else if (encoder_int_check(0, 0)) {
-        // 左转
-        pid_motor(0, 200);
-    } else if (encoder_int_check(0, 0)) {
-        // 直行
-        pid_motor(2, 200);
-    } else if (encoder_int_check(0, 0)) {
-        // 左转
-        pid_motor(0, 200);
-    } else if (encoder_int_check(0, 0)) {
-        // 右转
-        pid_motor(200, 0);
-    } else if (encoder_int_check(0, 0)) {
-        // 绕障完成，切回正常运行
-        car_state = STATE_RUN;
+    // 每次状态切换等待 1s
+    if (barrier_next) {
+        car_stop();
+        if (count++ > 100) {
+            count = 0;
+            imu660ra_yaw = 0;
+            encoder_int_clear();
+            barrier_stage++;
+            barrier_next = false;
+        }
+    } else {
+        switch (barrier_stage) {
+            BARRIER_CASE_YAW(1, turn_right, < BARRIER_TURN); // 右转，面向赛道外
+            BARRIER_CASE_ENC(2, normal_run, BARRIER_IO);     // 直行，出赛道
+            BARRIER_CASE_YAW(3, turn_left, > -BARRIER_TURN); // 左转，摆正
+            BARRIER_CASE_ENC(4, normal_run, BARRIER_GO);     // 直行，走过障碍
+            BARRIER_CASE_YAW(5, turn_left, > -BARRIER_TURN); // 左转，面向赛道
+            BARRIER_CASE_ENC(6, normal_run, BARRIER_IO);     // 直行，进入赛道
+            BARRIER_CASE_YAW(7, turn_right, < BARRIER_TURN); // 右转，摆正
+            case 8:
+                // 绕障完成，切回正常运行
+                encoder_int_clear();
+                barrier_stage = 0;
+                barrier_next = true;
+                imu660ra_yaw = 0;
+                car_state = CAR_STOP; // TODO: CAR_RUN
+                break;
+        }
     }
 }
+
+#undef BARRIER_CASE
 
 static void car_run()
 {
@@ -56,22 +91,27 @@ static void car_run()
             break;
         }
     }
-    // 冲出赛道停车
-    if (!has_adc) {
-        car_state = STATE_STOP;
-    } /* else if (tof_up <= 500) {
-        car_state = STATE_BARRIER;
-    } */
+
+    // 冲出赛道和霍尔停车
+    if (!has_adc || HALL) {
+        car_state = CAR_STOP;
+    } else if (tof_finish && tof_up <= 500) {
+        pid_adc = false;
+        car_state = CAR_BARRIER;
+        barrier_stage = 0;
+        barrier_next = true;
+        tof_finish = 0;
+    }
 
     // 延迟 1s 后摆正
-    if (count >= 100) {
-        pid_adc_enable = true;
+    if (count > 100) {
+        pid_adc = true;
         // 延迟 3s 后启动
-        if (count >= 300) {
-            pid_motor(SPEED, SPEED);
+        if (count > 300) {
+            normal_run();
         } else {
             count++;
-            pid_motor(0, 0);
+            car_stop();
         }
     } else {
         count++;
@@ -83,19 +123,20 @@ void tm1_isr_callback()
     encoder_update();
     tof_update();
     adc_update();
+    imu660ra_update();
 
     switch (car_state) {
-        case STATE_STOP:
-            pid_adc_enable = false;
+        case CAR_STOP:
+            pid_adc = false;
             // encoder_int_clear();
             count = 0;
-            pid_motor(0, 0);
+            car_stop();
             break;
-        case STATE_RUN:
+        case CAR_RUN:
             car_run();
             break;
-        case STATE_BARRIER:
-
+        case CAR_BARRIER:
+            car_barrier();
             break;
     }
 }

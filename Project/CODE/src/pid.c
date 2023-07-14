@@ -51,13 +51,13 @@ pid_t pid_motor_l = PID_NEW(10, 0.5, -5),
 #undef PID_NEW
 
 int pid_pwm_l = 0, pid_pwm_r = 0, pid_pwm_adc = 0;
-bool pid_adc_enable = false;
+bool pid_adc = false;
 
 // TODO: 拆分为单独的模块
 void pid_motor(int target_l, int target_r)
 {
     pid_pwm_adc = 0;
-    if (pid_adc_enable) {
+    if (pid_adc) {
         pid_pwm_adc = pid(&pid_motor_adc, 0, adc_bias);
     }
 

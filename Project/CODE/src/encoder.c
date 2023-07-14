@@ -6,8 +6,8 @@ void encoder_init()
     ctimer_count_init(ENCODER_R);
 }
 
-int encoder_l = 0, encoder_r = 0,
-    encoder_int_l = 0, encoder_int_r = 0;
+int encoder_l = 0, encoder_r = 0;
+int32 encoder_int_l = 0, encoder_int_r = 0;
 
 void encoder_update()
 {

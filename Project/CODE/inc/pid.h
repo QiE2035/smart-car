@@ -16,7 +16,7 @@ extern pid_t pid_motor_l,
     pid_motor_adc;
 
 extern int pid_pwm_l, pid_pwm_r , pid_pwm_adc;
-extern bool pid_adc_enable;
+extern bool pid_adc;
 
 void pid_motor(int target_l, int target_r);
 // void pid_adc();
