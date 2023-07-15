@@ -21,6 +21,7 @@ extern float adc_k[ADC_K_COUNT];
 #define ADC_MF adc_datas[3]
 #define ADC_MB adc_datas[4]
 
+// TODO: ADC 最大值
 #define ADC_MAX    3000.0
 #define ADC_NORMAL 100
 

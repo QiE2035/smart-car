@@ -39,12 +39,17 @@ bool barrier_next = true;
         }                                                  \
         break
 
-#define BARRIER_TURN 30
+// 绕障参数
+#define BARRIER_DIR  0 左 1 右
+#define BARRIER_TURN 45
 
-#define BARRIER_IO 7600
-#define BARRIER_GO 7600
+#define BARRIER_IO 2048
+#define BARRIER_GO 2048
 
+// TODO: 阶段等待时间
 #define STAGE_WAIT 10
+
+bool tof_eanble = true;
 
 static void car_barrier()
 {
@@ -59,21 +64,35 @@ static void car_barrier()
             barrier_next = false;
         }
     } else {
+        // TODO: 绕障方向
         switch (barrier_stage) {
-            BARRIER_CASE_YAW(1, turn_right, < BARRIER_TURN); // 右转，面向赛道外
+            // 右侧绕障
+            /* BARRIER_CASE_YAW(1, turn_right, < BARRIER_TURN); // 右转，面向赛道外
             BARRIER_CASE_ENC(2, normal_run, BARRIER_IO);     // 直行，出赛道
             BARRIER_CASE_YAW(3, turn_left, > -BARRIER_TURN); // 左转，摆正
             BARRIER_CASE_ENC(4, normal_run, BARRIER_GO);     // 直行，走过障碍
             BARRIER_CASE_YAW(5, turn_left, > -BARRIER_TURN); // 左转，面向赛道
             BARRIER_CASE_ENC(6, normal_run, BARRIER_IO);     // 直行，进入赛道
-            BARRIER_CASE_YAW(7, turn_right, < BARRIER_TURN); // 右转，摆正
+            BARRIER_CASE_YAW(7, turn_right, < BARRIER_TURN); // 右转，摆正 */
+
+            // 左侧绕障
+            BARRIER_CASE_YAW(1, turn_left, > -BARRIER_TURN); // 左转，面向赛道外
+            BARRIER_CASE_ENC(2, normal_run, BARRIER_IO);     // 直行，出赛道
+            BARRIER_CASE_YAW(3, turn_right, < BARRIER_TURN); // 右转，摆正
+            BARRIER_CASE_ENC(4, normal_run, BARRIER_GO);     // 直行，走过障碍
+            BARRIER_CASE_YAW(5, turn_right, < BARRIER_TURN); // 右转，面向赛道
+            BARRIER_CASE_ENC(6, normal_run, BARRIER_IO);     // 直行，进入赛道
+            BARRIER_CASE_YAW(7, turn_left, > -BARRIER_TURN); // 左转，摆正
+
             case 8:
                 // 绕障完成，切回正常运行
                 // imu660ra_yaw = 0;
                 // encoder_int_clear();
                 barrier_stage = 0;
                 barrier_next = true;
+                tof_eanble = false;
                 car_state = CAR_RUN;
+                // car_state = CAR_STOP;
                 break;
         }
     }
@@ -99,57 +118,81 @@ static void car_out()
     } else {
         switch (out_stage) {
             case 1:
-                // 直行，出库
-                if (encoder_arrive(7340)) {
+                // TODO: 直行，出库
+                if (encoder_arrive(2048)) {
                     normal_run();
                 } else {
                     out_next = true;
                 }
                 break;
             case 2:
-                // 出库，左转
-                if (imu660ra_yaw > -60) {
-                    turn_left();
+                // TODO: 出库方向
+                // 左转
+                /* if (imu660ra_yaw > -60) {
+                    turn_left(); */
+                // 右转
+                if (imu660ra_yaw < 60) {
+                    turn_right();
                 } else {
                     out_next = true;
                 }
                 break;
             case 3:
-                // 出库完成，开始运行
+                // TODO: 出库完成，开始运行
                 out_stage = 0;
                 out_next = true;
                 car_state = CAR_RUN;
+                // car_state = CAR_STOP;
+                pid_adc = true;
                 return;
         }
     }
 }
+
+// bool is_cross = true;
 
 static void car_run()
 {
     int i = 0;
     bool has_adc = false;
 
-    // 冲出赛道检测
     while (++i < ADC_COUNT) {
-        if (adc_datas[i] >= 20) {
+        // 冲出赛道检测
+        if (adc_datas[i] > 20) {
             has_adc = true;
             break;
         }
+
+        // 十字检测
+        /* if (adc_datas[i] < 90 && count == 0) {
+            is_cross = false;
+        } */
     }
 
+    /* if (is_cross) {
+        pid_adc = false;
+        if (count++ > 50) {
+            count = 0;
+            pid_adc = true;
+        }
+    } */
+
+    // 冲出赛道和霍尔停车
     if (!has_adc || HALL) {
-        // 冲出赛道和霍尔停车
         car_state = CAR_STOP;
         return;
     }
-    if (tof_finish && tof_up <= 500) {
-        // 障碍
+
+    // TODO: TOF 距离
+    /* if (tof_finish && tof_up <= 300 && tof_eanble) {
         tof_reset();
         pid_adc = false;
         barrier_stage = 0;
         barrier_next = true;
+        // TODO: CAR_BARRIER
         car_state = CAR_BARRIER;
-    }
+        // car_state = CAR_STOP;
+    } */
 
     normal_run();
 
@@ -178,7 +221,8 @@ void tm1_isr_callback()
     switch (car_state) {
         case CAR_STOP:
             pid_adc = false;
-            // encoder_int_clear();
+            // TODO: 停车清除编码器
+            encoder_int_clear();
             count = 0;
             car_stop();
             break;

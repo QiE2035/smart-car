@@ -44,6 +44,7 @@ static int pid(pid_t *pid_data, int target, int current)
         (KP), (KI), (KD), 0, 0, 0 \
     }
 
+// TODO: PID 参数
 pid_t pid_motor_l = PID_NEW(10, 0.5, -5),
       pid_motor_r = PID_NEW(10, 0.5, -5),
       pid_motor_adc = PID_NEW(80, 20, 50);

@@ -65,7 +65,7 @@ static uint16 adc_filter(ADCN_enum adc)
 }
 
 // int adc_mins[ADC_COUNT] = {0, 77, 50, 35, 20, 0, 130, 0};
-int adc_mins[ADC_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
+// int adc_mins[ADC_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
@@ -77,8 +77,10 @@ void adc_update()
         tmp = max(tmp, 0);
         adc_datas[i] =
             tmp / (ADC_MAX - adc_mins[i]) * ADC_NORMAL; */
-        adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
-        // adc_datas[i] = adc_filter(adcs[i]);
+        
+        // TODO: ADC 归一化
+        // adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
+        adc_datas[i] = adc_filter(adcs[i]);
     }
     adc_update_bias();
 }

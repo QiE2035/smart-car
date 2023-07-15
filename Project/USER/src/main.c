@@ -40,8 +40,11 @@
 void btn_fun()
 {
     if (btn_click(BTN_3)) {
-        delay_ms(3000);
+        delay_ms(1000);
+        // TODO: 按钮
         car_state = CAR_OUT;
+        // car_state = CAR_RUN;
+        // car_state = CAR_BARRIER;
     }
 
     /* if (btn_click(BTN_1)) {
@@ -74,8 +77,8 @@ void main()
 {
     board_init(); // 初始化寄存器,勿删除此句代码。
 
-    // ips114_init();
-    // ips114_clear(WHITE);
+    ips114_init();
+    ips114_clear(WHITE);
 
     tof_init();
     motor_init();
@@ -89,20 +92,21 @@ void main()
 
     while (1) {
 
-        /* printf("%d, %d, %d, %d, %d, %d, %d\n",
+        printf("%d, %d, %d, %d, %d\n",
                ADC_L1, ADC_R1, // ADC_L3,
                ADC_L2, ADC_R2, // ADC_R3,
-               ADC_MF, ADC_MB, adc_bias); */
+               adc_bias);
 
         btn_fun();
 
-        /* ips114_showint32(0, 1, encoder_int_l, 10);
-        ips114_showint32(0, 2, encoder_int_r, 10);
-
         if (tof_finish) {
-            ips114_showuint16(0, 3, tof_up);
+            ips114_showuint16(0, 0, tof_up);
             tof_reset();
-        } */
+        }
+
+        ips114_showfloat(0, 1, imu660ra_yaw, 3, 6);
+        ips114_showint32(0, 2, encoder_int_l, 10);
+        ips114_showint32(0, 3, encoder_int_r, 10);
 
         /*  printf("%d, %f, %f, %f, %d\n",
                 adc_bias, pid_motor_adc.kp,
