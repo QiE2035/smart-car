@@ -47,14 +47,13 @@ static int pid(pid_t *pid_data, int target, int current)
 // TODO: PID 参数
 pid_t pid_motor_l = PID_NEW(10, 0.5, -5),
       pid_motor_r = PID_NEW(10, 0.5, -5),
-      pid_motor_adc = PID_NEW(80, 20, 50);
+      pid_motor_adc = PID_NEW(200, 20, 50);
 
 #undef PID_NEW
 
 int pid_pwm_l = 0, pid_pwm_r = 0, pid_pwm_adc = 0;
 bool pid_adc = false;
 
-// TODO: 拆分为单独的模块
 void pid_motor(int target_l, int target_r)
 {
     pid_pwm_adc = 0;

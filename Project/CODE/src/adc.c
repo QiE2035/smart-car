@@ -25,7 +25,6 @@ float adc_k[ADC_K_COUNT] = {1.0, 2.5, 0, 150};
 int adc_bias = 0;
 
 // 更新差比和
-// TODO: 差比和差
 static void adc_update_bias()
 {
     int bias = adc_k[0] * (ADC_L1 - ADC_R1) +
@@ -79,8 +78,8 @@ void adc_update()
             tmp / (ADC_MAX - adc_mins[i]) * ADC_NORMAL; */
         
         // TODO: ADC 归一化
-        // adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
-        adc_datas[i] = adc_filter(adcs[i]);
+        adc_datas[i] = adc_filter(adcs[i]) / ADC_MAX * ADC_NORMAL;
+        // adc_datas[i] = adc_filter(adcs[i]);
     }
     adc_update_bias();
 }

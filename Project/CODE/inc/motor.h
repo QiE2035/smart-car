@@ -19,7 +19,6 @@
 
 #define MOTOR_PWM_FREQ 17000
 
-// TODO: 拆分为单独的模块
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
 void motor_init();

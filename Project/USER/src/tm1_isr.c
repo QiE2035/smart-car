@@ -39,8 +39,8 @@ bool barrier_next = true;
         }                                                  \
         break
 
-// 绕障参数
-#define BARRIER_DIR  0 左 1 右
+// TODO: 绕障参数
+#define BARRIER_DIR  0 // 0 左 1 右
 #define BARRIER_TURN 45
 
 #define BARRIER_IO 2048
@@ -118,7 +118,6 @@ static void car_out()
     } else {
         switch (out_stage) {
             case 1:
-                // TODO: 直行，出库
                 if (encoder_arrive(2048)) {
                     normal_run();
                 } else {
@@ -128,11 +127,11 @@ static void car_out()
             case 2:
                 // TODO: 出库方向
                 // 左转
-                /* if (imu660ra_yaw > -60) {
-                    turn_left(); */
-                // 右转
-                if (imu660ra_yaw < 60) {
-                    turn_right();
+                if (imu660ra_yaw > -60) {
+                    turn_left();
+                    // 右转
+                    /* if (imu660ra_yaw < 60) {
+                        turn_right(); */
                 } else {
                     out_next = true;
                 }
@@ -189,7 +188,6 @@ static void car_run()
         pid_adc = false;
         barrier_stage = 0;
         barrier_next = true;
-        // TODO: CAR_BARRIER
         car_state = CAR_BARRIER;
         // car_state = CAR_STOP;
     } */
